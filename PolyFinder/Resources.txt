@@ -1,7 +1,0 @@
-
-https://docs.opencv.org/3.3.1/d3/db4/tutorial_py_watershed.html
-https://www.pyimagesearch.com/2014/09/08/thresholding-simple-image-segmentation-using-opencv/
-https://docs.opencv.org/3.3.0/d2/dbd/tutorial_distance_transform.html
-https://www.pyimagesearch.com/2015/11/02/watershed-opencv/
-
-http://www.coldvision.io/2016/04/18/image-segmentation-watershed-c-opencv-3-x-cuda/
