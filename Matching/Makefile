@@ -8,7 +8,6 @@ SRCS = main.cpp
 CFLAGS = -Wall
 CFLAGS += `pkg-config --cflags opencv`
 LIBS = `pkg-config --libs opencv`
-LIBS += -lGL -lGLU -lglut -lXmu -lXi -lstdc++ -lm
 
 all: $(PROG)
 

@@ -11,7 +11,7 @@ Mat art;
 Mat art_ref; 
 Mat art_ref_tuned;
 Mat avialabilty; 
-Mat details; 
+Mat details1;
 
 vector <vector < vector <double> > > result_scores;						/// container for filter output	
 orineted_position oriented_pos;
@@ -38,7 +38,7 @@ int main( int argc, char** argv )
 	art = Mat::zeros( image.rows, image.cols, CV_8UC4 );
 	art = Scalar( 255, 255, 255, 255 );	
     avialabilty = 	Mat::zeros( image.rows, image.cols, CV_8UC4 );
-    details = 		Mat::zeros( image.rows, image.cols, CV_8UC4 );
+    details1 = 		Mat::zeros( image.rows, image.cols, CV_8UC4 );
     
 	int count = 0;	
 	int addmited = 0;
@@ -70,7 +70,7 @@ int main( int argc, char** argv )
 		{
 			Vec4b p1 ;	
 			p1[0]= p1[1]= p1[2]= (details_matrix[x][y]/441.67)*255;
-			details.at<Vec4b>(Point(x, y)) = p1;
+			details1.at<Vec4b>(Point(x, y)) = p1;
 		}
 	}
 	
@@ -78,7 +78,7 @@ int main( int argc, char** argv )
 	//imshow("image", (image)); 
 	//imshow("art", (art)); 
 	//imshow("avialabilty", (avialabilty)); 
-	//imshow("details", (details)); 
+	//imshow("details1", (details1));
 	 
 	//puzzleImage(image, 2500, image.cols, image.rows);
 	 
