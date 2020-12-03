@@ -1,0 +1,2 @@
+export PKG_CONFIG_PATH="/usr/local/opt/opencv@3/lib/pkgconfig"
+export PKG_CONFIG_PATH="/usr/local/opt/opencv@4/lib/pkgconfig"
