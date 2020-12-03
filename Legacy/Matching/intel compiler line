@@ -1,0 +1,5 @@
+/opt/intel/bin/icpc -Wall `pkg-config --cflags opencv` -o /home/reda/Projects/Polygraph/Operations/Matching/prog /home/reda/Projects/Polygraph/Operations/Matching/main.cpp `pkg-config --libs opencv` -lGL -lGLU -lglut -lXmu -lXi -lstdc++ -lm -O3
+
+
+
+
