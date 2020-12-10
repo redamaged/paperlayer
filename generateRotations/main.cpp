@@ -16,8 +16,8 @@ using namespace Helpers;
 int main(int argc, char** argv )
 {
     Mat image;
-    image = imread( "shard36.png", IMREAD_UNCHANGED );
-   // image = addAplhaChannel(image);
+    image = imread( "shard.png", IMREAD_UNCHANGED );
+    image = addAplhaChannel(image);
     cout<< "channels:"<<  image.channels()<<endl;
     
     imshow("Display Image", image);
@@ -29,8 +29,7 @@ int main(int argc, char** argv )
     }
    
     
-    Mat image2= Rotate(image,-36);
-    image2 = removeAlphaChannel(image2);
+    Mat image2= Rotate(image,45);
     saveImageRandom(image2, "output");
     imshow("Output", image2);
     cout<< "channels:"<<  image2.channels()<<endl;
