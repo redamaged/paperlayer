@@ -8,7 +8,7 @@ project(imageProcessing
 
 find_package( OpenCV REQUIRED )
 
-add_library( imageProcessing STATIC helpers.cpp helpers.hpp )
+add_library( imageProcessing STATIC helpers.cpp helpers.hpp algos.cpp algos.hpp)
 target_include_directories(imageProcessing PUBLIC ${OpenCV_INCLUDE_DIRS} )
 target_link_libraries(imageProcessing ${OpenCV_LIBS} )
 
