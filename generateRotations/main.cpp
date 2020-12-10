@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <unistd.h>
-
-#include <opencv2/opencv.hpp>
-
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
+//#include <opencv2/opencv.hpp>
+//#include "opencv2/highgui/highgui.hpp"
+//#include "opencv2/imgproc/imgproc.hpp"
 
 #include "helpers.hpp"
 
@@ -17,14 +15,12 @@ using namespace Helpers;
 
 int main(int argc, char** argv )
 {
-
-
-    Mat image_a;
-    image_a = imread( "Lenna.png" , -1);
-    Mat image = copyPolygon(image_a);
+    Mat image;
+    image = imread( "shard36.png", IMREAD_UNCHANGED );
+   // image = addAplhaChannel(image);
     cout<< "channels:"<<  image.channels()<<endl;
     
-    imshow("Display Imagesss", image);
+    imshow("Display Image", image);
 
     if ( !image.data )
     {
@@ -33,13 +29,13 @@ int main(int argc, char** argv )
     }
    
     
-   
-    for(int i=0; i<360; i+=10)
-    {
-        Mat image2= Rotate(image,i);
-        saveImageRandom(image2, "output");
-        usleep(1000000);
-    }
+    Mat image2= Rotate(image,-36);
+    image2 = removeAlphaChannel(image2);
+    saveImageRandom(image2, "output");
+    imshow("Output", image2);
+    cout<< "channels:"<<  image2.channels()<<endl;
+
+    
     waitKey(0);
 
     std::cout<< "Kaaaaaak"<< std::endl;
