@@ -18,9 +18,10 @@ using namespace cv;
 
 namespace Helpers
 {
-         Mat copyPolygon(Mat source);
-         void saveImageRandom(Mat image, String filename);
-         Mat Rotate(Mat source, double angle);
+    Mat addAplhaChannel(Mat source);
+    void saveImageRandom(Mat image, String filename);
+    Mat Rotate(Mat source, double angle);
+    Mat removeAlphaChannel(Mat source);
 };
  
 #endif

@@ -10,11 +10,17 @@ using namespace std;
 using namespace cv;
 
 
-Mat Helpers::copyPolygon(Mat source)
+Mat Helpers::addAplhaChannel(Mat source)
 {
     cv::Mat newSrc(source.size(), CV_MAKE_TYPE(source.depth(), 4));
     cvtColor(source,newSrc,COLOR_BGR2BGRA);
     return newSrc;
+}
+
+Mat aplhaToMat(Mat source)
+{
+//    cv::Mat newSrc(source.size(), CV_MAKE_TYPE(source.depth(), 4));
+//    newSrc.cha
 }
 
 void Helpers::saveImageRandom(Mat image, String filename)
@@ -64,6 +70,13 @@ Mat Helpers::Rotate(Mat source, double angle)
     
     
     return dst(myROI);
+}
+
+Mat Helpers::removeAlphaChannel(Mat source)
+{
+    cv::Mat newSrc(source.size(), CV_MAKE_TYPE(source.depth(), 3));
+    cvtColor(source,newSrc,COLOR_BGRA2BGR);
+    return newSrc;
 }
 
 
