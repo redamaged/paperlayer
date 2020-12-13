@@ -16,7 +16,7 @@ using namespace Helpers;
 int main(int argc, char** argv )
 {
     Mat image;
-    image = imread( "shard.png", IMREAD_UNCHANGED );
+    image = imread( "nose.png", IMREAD_UNCHANGED );
     image = addAplhaChannel(image);
     cout<< "channels:"<<  image.channels()<<endl;
     

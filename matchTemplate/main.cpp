@@ -30,8 +30,6 @@ int main( int argc, char** argv )
   }
     
   namedWindow( image_window, WINDOW_AUTOSIZE );
-  namedWindow( templ_window, WINDOW_AUTOSIZE );
-  namedWindow( mask_window, WINDOW_AUTOSIZE );
 
   const char* trackbar_label = "Method: \n 0: SQDIFF \n 1: SQDIFF NORMED \n 2: TM CCORR \n 3: TM CCORR NORMED \n 4: TM COEFF \n 5: TM COEFF NORMED";
   createTrackbar( trackbar_label, image_window, &match_method, max_Trackbar, MatchingMethod );
@@ -58,8 +56,12 @@ void MatchingMethod( int, void* )
     cout<< "Confidence:" << acc << endl;
     cout<< "Rotation Angle:" << rotation_angle << endl;
     rectangle( img_display, matchLoc, Point( matchLoc.x + rotated_templ.cols , matchLoc.y + rotated_templ.rows ), Scalar::all(0), 2, 8, 0 );
-     
+  
+    rotated_templ= Helpers::multiplyAlphaChannel(rotated_templ, 0.5);
+   
+    Helpers::collatePatch(img_display, rotated_templ, matchLoc);
+    
     imshow( image_window, img_display );
-    imshow( templ_window, templ);
+    imshow( templ_window, rotated_templ);
 }
 

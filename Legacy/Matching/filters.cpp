@@ -129,11 +129,11 @@ vector <vector< vector <double> > > filter_fast(Mat image_mat,
 }
 
 void filter_fine_tune(	Mat image_mat,
-						Mat patch_mat, 
-						orineted_position seed_op, 
-						int search_raduis,
-						orineted_position &result_op,
-						double & result_error)
+                      Mat patch_mat,
+                      orineted_position seed_op,
+                      int search_raduis,
+                      orineted_position &result_op,
+                      double & result_error)
 {
 	result_error = 100000000000000 ;	
 	int W= image_mat.cols; int H = image_mat.rows;		

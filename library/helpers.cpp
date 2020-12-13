@@ -9,6 +9,28 @@
 using namespace std;
 using namespace cv;
 
+Mat Helpers::cropToVisible(Mat source)
+{
+    int maxX = 0, minX =source.cols , maxY=0, minY = source.rows;                // bounding box
+    for (int r=0; r<source.rows; r++)
+    {
+        for (int c=0; c<source.cols; c++)
+        {
+            bool visible = (int)source.at<Vec4b>(Point(c, r))[3];
+            if (visible)
+            {
+                minX = min(minX,c);
+                minY = min(minY,r);
+                maxX = max(maxX, c);
+                maxY = max(maxY,r);
+            }
+        }
+    }
+    Rect myROI(minX, minY, maxX-minX, maxY-minY);
+    
+    
+    return source(myROI);
+}
 
 Mat Helpers::addAplhaChannel(Mat source)
 {
@@ -17,11 +39,6 @@ Mat Helpers::addAplhaChannel(Mat source)
     return newSrc;
 }
 
-Mat aplhaToMat(Mat source)
-{
-//    cv::Mat newSrc(source.size(), CV_MAKE_TYPE(source.depth(), 4));
-//    newSrc.cha
-}
 
 void Helpers::saveImageRandom(Mat image, String filename)
 {
@@ -50,26 +67,7 @@ Mat Helpers::Rotate(Mat source, double angle)
     Mat dst;
     warpAffine(source, dst, rot, bbox.size());
     
-
-    int maxX = 0, minX =dst.cols , maxY=0, minY = dst.rows;                // bounding box
-    for (int r=0; r<dst.rows; r++)
-    {
-        for (int c=0; c<dst.cols; c++)
-        {
-            bool visible = (int)dst.at<Vec4b>(Point(c, r))[3];
-            if (visible)
-            {
-                minX = min(minX,c);
-                minY = min(minY,r);
-                maxX = max(maxX, c);
-                maxY = max(maxY,r);
-            }
-        }
-    }
-    Rect myROI(minX, minY, maxX-minX, maxY-minY);
-    
-    
-    return dst(myROI);
+    return cropToVisible(dst);
 }
 
 Mat Helpers::removeAlphaChannel(Mat source)
@@ -79,4 +77,36 @@ Mat Helpers::removeAlphaChannel(Mat source)
     return newSrc;
 }
 
+void Helpers::collatePatch(Mat src, Mat overlay, Point& location)
+{
+    for (int y = max(location.y, 0); y < src.rows; ++y)
+    {
+        int fY = y - location.y;
+
+        if (fY >= overlay.rows)
+            break;
+
+        for (int x = max(location.x, 0); x < src.cols; ++x)
+        {
+            int fX = x - location.x;
+
+            if (fX >= overlay.cols)
+                break;
+
+            double opacity = ((double)overlay.data[fY * overlay.step + fX * overlay.channels() + 3]) / 255;
+
+            for (int c = 0; opacity > 0 && c < src.channels(); ++c)
+            {
+                unsigned char overlayPx = overlay.data[fY * overlay.step + fX * overlay.channels() + c];
+                unsigned char srcPx = src.data[y * src.step + x * src.channels() + c];
+                src.data[y * src.step + src.channels() * x + c] = srcPx * (1. - opacity) + overlayPx * opacity;
+            }
+        }
+    }
+}
+
+Mat Helpers::multiplyAlphaChannel(Mat src, float value)
+{
+    return src.mul(Scalar(1,1,1,value));
+}
 

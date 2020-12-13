@@ -18,10 +18,14 @@ using namespace cv;
 
 namespace Helpers
 {
-    Mat addAplhaChannel(Mat source);
-    void saveImageRandom(Mat image, String filename);
-    Mat Rotate(Mat source, double angle);
-    Mat removeAlphaChannel(Mat source);
+Mat cropToVisible(Mat source);
+Mat addAplhaChannel(Mat source);
+void saveImageRandom(Mat image, String filename);
+Mat Rotate(Mat source, double angle);
+Mat removeAlphaChannel(Mat source);
+void collatePatch(Mat src, Mat overlay, Point& location);
+Mat multiplyAlphaChannel(Mat src, float value);
+
 };
  
 #endif
