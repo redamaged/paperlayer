@@ -40,8 +40,28 @@ CallBackFunc(int event,int x,int y,int flags,void* userdata)
         ROI = Helpers::cropToVisible(ROI);
         
         finished=true;
+
+		ROI = Helpers::Rotate(ROI, 273);
         
         Helpers::saveImageRandom(ROI, "out");
+
+		Point matchLoc;
+		Mat img_display;
+		origin.copyTo(img_display);
+
+		Mat rotated_templ;
+		int rotation_angle;
+		double acc;
+		Algos::matchTemplate(origin, ROI, 3, matchLoc, rotated_templ, rotation_angle, acc);
+		cout << "Confidence:" << acc << endl;
+		cout << "Rotation Angle:" << rotation_angle << endl;
+		rectangle(img_display, matchLoc, Point(matchLoc.x + rotated_templ.cols, matchLoc.y + rotated_templ.rows), Scalar::all(0), 1, 8, 0);
+
+		rotated_templ = Helpers::multiplyAlphaChannel(rotated_templ,1);
+
+		Helpers::collatePatch(img_display, rotated_templ, matchLoc);
+
+		imshow("result", img_display);
         
         return;
     }
