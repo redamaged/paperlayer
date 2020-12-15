@@ -20,8 +20,8 @@ void MatchingMethod( int, void* );
  */
 int main( int argc, char** argv )
 {
-    img = imread( "Lenna.png" ,IMREAD_UNCHANGED);
-    templ = imread( "shard45.png", IMREAD_UNCHANGED );
+    img = imread( "../../../../Data/Lenna.png" ,IMREAD_UNCHANGED);
+    templ = imread( "../../../../Data/shard.png", IMREAD_UNCHANGED );
     
   if(img.empty() || templ.empty() )
   {

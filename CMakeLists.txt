@@ -10,6 +10,4 @@ project(
 set(root_dir  ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(library)
-add_subdirectory(generateRotations)
-add_subdirectory(matchTemplate)
-add_subdirectory(annotation)
+add_subdirectory(Apps)

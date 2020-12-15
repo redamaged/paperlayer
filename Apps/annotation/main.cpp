@@ -23,7 +23,7 @@ CallBackFunc(int event,int x,int y,int flags,void* userdata)
         }
         // Close polygon
         line(img,vertices[vertices.size()-1],vertices[0],Scalar(0,0,0));
-        imshow("ImageDisplay",img);
+        imshow("ImageDisplay",img); 
 
         // Mask is black with white where our ROI is
         Mat mask= Mat::zeros(img.rows,img.cols,CV_8UC1);
@@ -81,8 +81,8 @@ CallBackFunc(int event,int x,int y,int flags,void* userdata)
 
 int main()
 {
-    img=imread("Lenna.png");
-    origin =imread("Lenna.png");
+    img=imread("../../../Data/Lenna.png");
+    origin =imread("../../../Data/Lenna.png");
     if(img.empty()){
         cout << "Error loading the image" << endl;
         exit(1);
