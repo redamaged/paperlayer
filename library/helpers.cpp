@@ -110,3 +110,92 @@ Mat Helpers::multiplyAlphaChannel(Mat src, float value)
     return src.mul(Scalar(1,1,1,value));
 }
 
+
+void recursive_tri(Mat img, vector<Point> contour,  Mat &display, String dir)
+{
+	// Draw The current Triangle
+	line(display, contour[0], contour[1], Scalar(0, 0, 0));
+	line(display, contour[1], contour[2], Scalar(0, 0, 0));
+	line(display, contour[2], contour[0], Scalar(0, 0, 0));
+
+	cout << "Contour Area: " << contourArea(contour) << endl;
+	if(contourArea(contour)< 20000)
+	{ }
+	else
+	{
+
+
+		float m1; 
+		float b1;
+
+		if ((contour[0].x - contour[1].x) == 0) m1 = 0;
+		else m1= (contour[0].y - contour[1].y) / (contour[0].x - contour[1].x);
+		if ((m1 * contour[0].x) == 0) b1 = 0;
+		else  b1 = contour[0].y / (m1 * contour[0].x);
+
+		int min = (contour[0].x < contour[1].x) ? contour[0].x : contour[1].x;
+		float x1 = min + (std::abs(contour[0].x - contour[1].x)) / 2;
+		float y1 = m1 * x1 + b1;
+
+		cout << "x1:" << x1 << endl;
+		cout << "y1:" << y1 << endl;
+		//////////////////
+		if ((contour[1].x - contour[2].x) == 0) m1 = 0;
+		else m1 = (contour[1].y - contour[2].y) / (contour[1].x - contour[2].x);
+		if ((m1 * contour[1].x) == 0) b1 = 0;
+		else b1 = contour[1].y / (m1 * contour[1].x);
+
+		min = (contour[1].x < contour[2].x) ? contour[1].x : contour[2].x;
+		float x2 = min + (std::abs(contour[1].x - contour[2].x)) / 2;
+		float y2 = m1 * x1 + b1;	
+		
+		cout << "m2:" << m1 << endl;
+		cout << "b1:" << b1 << endl;
+		cout << "x2:" << x2 << endl;
+		cout << "y2:" << y2 << endl;
+		/////////////////
+		if ((contour[2].x - contour[0].x) == 0)
+		{
+			m1 = 0; b1 = contour[2].y;
+		}
+		else
+		{
+			m1 = (contour[2].y - contour[0].y) / (contour[2].x - contour[0].x);
+			b1 = contour[2].y / (m1 * contour[2].x);
+		}
+
+		min = (contour[2].x < contour[0].x) ? contour[2].x : contour[0].x;
+		float x3 = min + (std::abs(contour[2].x - contour[0].x)) / 2;
+		float y3 = m1 * x1 + b1;
+		
+		Point a(x1,x2);
+		Point b(x2, y2);
+		Point c((contour[2].x + contour[0].x) / 2, (contour[2].y + contour[0].y) / 2);
+
+		cv::circle(display, a, 10, Scalar(255, 0, 0), 2);
+		cv::circle(display, b, 10, Scalar(0, 255, 0), 2);
+	//	cv::circle(display, c, 10, Scalar(128, 128, 128), 2);
+
+		cv::circle(display, contour[0], 20, Scalar(0, 0, 0), 2);
+		cv::circle(display, contour[1], 20, Scalar(255, 255, 255), 2);
+		cv::circle(display, contour[2], 20, Scalar(127, 127, 127), 2);
+		//recursive_tri(img, { contour[0], a, c }, display, dir);
+		//recursive_tri(img, { contour[1], a, b }, display, dir);
+		//recursive_tri(img, { contour[2], b, c }, display, dir);
+		//recursive_tri(img, { a, b, c }, display, dir);
+
+	}
+
+}
+
+Mat Helpers::puzzle(Mat img, String dir_name)
+{
+	Mat display = img.clone();
+
+	vector<Point> contour1 = { Point(0,0), Point(img.cols,img.rows), Point(img.cols,0) };
+	vector<Point> contour2 = { Point(0,0), Point(img.cols,img.rows), Point(0,img.rows) };
+	//recursive_tri(img, contour1, display, dir_name);
+	recursive_tri(img, contour2, display, dir_name);
+
+	return display;
+}

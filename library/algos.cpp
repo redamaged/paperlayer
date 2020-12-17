@@ -189,7 +189,7 @@ void Algos::matchTemplate(Mat img, Mat templ, int matchMethod, Point& matchLocat
 }
 
 // ![get-psnr]
-double Algos::getPSNR(const Mat& I1, const Mat& I2)
+double Similarity::getPSNR(const Mat& I1, const Mat& I2)
 {
 	Mat s1;
 	absdiff(I1, I2, s1);       // |I1 - I2|
@@ -213,7 +213,7 @@ double Algos::getPSNR(const Mat& I1, const Mat& I2)
 
 // ![get-mssim]
 
-Scalar Algos::getMSSIM(const Mat& i1, const Mat& i2)
+Scalar Similarity::getMSSIM(const Mat& i1, const Mat& i2)
 {
 	const double C1 = 6.5025, C2 = 58.5225;
 	/***************************** INITS **********************************/
@@ -266,3 +266,30 @@ Scalar Algos::getMSSIM(const Mat& i1, const Mat& i2)
 	return mssim;
 }
 // ![get-mssim]
+
+double Similarity::getMSE(const Mat& I1, const Mat& I2)
+{
+	Mat s1;
+	absdiff(I1, I2, s1);       // |I1 - I2|
+	s1.convertTo(s1, CV_32F);  // cannot make a square on 8 bits
+	s1 = s1.mul(s1);           // |I1 - I2|^2
+
+	Scalar s = sum(s1);        // sum elements per channel
+
+	double sse = s.val[0] + s.val[1] + s.val[2]; // sum channels
+	double mse = sse / (double)(I1.channels() * I1.total());
+
+	return  mse;
+}
+
+double Similarity::getMAE(const Mat& I1, const Mat& I2)
+{
+	Mat s1;
+	absdiff(I1, I2, s1);       // |I1 - I2|
+	s1.convertTo(s1, CV_32F);  // cannot make a square on 8 bits
+	Scalar s = sum(s1);        // sum elements per channel
+
+	double sse = s.val[0] + s.val[1] + s.val[2]; // sum channels
+	double mae = 1- (sse / (double)(I1.channels() * I1.total()*255));
+	return mae;
+}
