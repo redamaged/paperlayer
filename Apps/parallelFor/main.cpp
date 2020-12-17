@@ -7,7 +7,7 @@ int main()
 {
 
 	const Mat img1 = imread("../../../../Data/Lenna.png", IMREAD_GRAYSCALE);
-	const Mat img2 = imread("../../../../Data/Lenna2.png", IMREAD_GRAYSCALE);
+	const Mat img2 = imread("../../../../Data/Lenna4.png", IMREAD_GRAYSCALE);
 
 	double PSNR;
 	double t1 = (double)getTickCount();
@@ -17,10 +17,11 @@ int main()
 
 	Scalar MSSIM;
 	t1 = (double)getTickCount();
-	Algos::getMSSIM(img1, img2);
+    MSSIM= Algos::getMSSIM(img1, img2);
 	t1 = ((double)getTickCount() - t1) / getTickFrequency();
 	cout << "MSSIM: " << MSSIM << "      Time: "<< t1 << " s" << endl;
 
-    waitKey();
+    
+   // waitKey();
 }
 
