@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char** argv )
 {
-    string dir_address ="../../../../Data2/";
+    string dir_address ="../../../../Data3/";
     string img_address = "../../../../Data/Lenna.png";
     Mat original= imread( img_address, IMREAD_UNCHANGED );
     Mat collage = cv::Mat::zeros(original.size(), CV_8UC4);

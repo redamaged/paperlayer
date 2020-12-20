@@ -27,7 +27,7 @@ CallBackFunc(int event,int x,int y,int flags,void* userdata)
 
         // Mask is black with white where our ROI is
         Mat mask= Mat::zeros(img.rows,img.cols,CV_8UC1);
-        
+//        /Users/reda/Projects/paperlayer/Apps/annotation/main.cpp
         vector<vector<Point>> pts{vertices};
         fillPoly(mask,pts,Scalar(255,255,255));
         
@@ -81,8 +81,8 @@ CallBackFunc(int event,int x,int y,int flags,void* userdata)
 
 int main()
 {
-    img=imread("../../../Data/Lenna.png");
-    origin =imread("../../../Data/Lenna.png");
+    img=imread("../../../../Data/Lenna.png");
+    origin =imread("../../../../Data/Lenna.png");
     if(img.empty()){
         cout << "Error loading the image" << endl;
         exit(1);
