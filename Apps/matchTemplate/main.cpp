@@ -7,7 +7,7 @@
 using namespace Helpers;
 
 bool use_mask;
-Mat img; Mat templ;
+Mat img; Mat templ, display;
 const char* image_window = "Source Image";
 const char* templ_window = "Template window";
 const char* mask_window = "Mask window";
@@ -22,7 +22,7 @@ int main( int argc, char** argv )
 {
     img = imread( "../../../../Data/Lenna.png" ,IMREAD_UNCHANGED);
     templ = imread( "../../../../Data/shard.png", IMREAD_UNCHANGED );
-    
+    display =cv::Mat::zeros(img.size(), CV_8UC3);
   if(img.empty() || templ.empty() )
   {
     cout << "Can't read one of the images" << endl;
@@ -52,7 +52,7 @@ void MatchingMethod( int, void* )
     Mat rotated_templ;
     int rotation_angle;
     double acc;
-    Algos::matchTemplate(img, templ, match_method, matchLoc, rotated_templ, rotation_angle, acc);
+    Algos::matchTemplate(img, templ, display, match_method, matchLoc, rotated_templ, rotation_angle, acc);
     cout<< "Confidence:" << acc << endl;
     cout<< "Rotation Angle:" << rotation_angle << endl;
     rectangle( img_display, matchLoc, Point( matchLoc.x + rotated_templ.cols , matchLoc.y + rotated_templ.rows ), Scalar::all(0), 2, 8, 0 );

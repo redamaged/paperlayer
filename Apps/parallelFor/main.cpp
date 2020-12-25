@@ -9,7 +9,7 @@ int main()
 {
 
 	const Mat img1 = imread("../../../../Data/Lenna.png", IMREAD_GRAYSCALE);
-	const Mat img2 = imread("../../../../Data/Lenna2.png", IMREAD_GRAYSCALE);
+	const Mat img2 = imread("../../../../Data/Lenna.png", IMREAD_GRAYSCALE);
 
 	double PSNR;
 	double t1 = (double)getTickCount();
@@ -21,8 +21,8 @@ int main()
 	t1 = (double)getTickCount();
     MSSIM= Similarity::getMSSIM(img1, img2);
 	t1 = ((double)getTickCount() - t1) / getTickFrequency();
-	cout << "MSSIM: " << MSSIM << "      Time: "<< t1 << " s" << endl;
-
+	cout << "MSSIM: " << MSSIM[0] << "      Time: "<< t1 << " s" << endl;
+ 
 	
 	t1 = (double)getTickCount();
 	double mse = Similarity::getMSE(img1, img2);

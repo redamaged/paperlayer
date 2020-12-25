@@ -123,6 +123,7 @@ void Helpers::collatePatch(Mat src, Mat overlay, Point& location)
                 break;
             
             double opacity = ((double)overlay.data[fY * overlay.step + fX * overlay.channels() + 3]) / 255;
+            if (opacity>0) opacity = 1;
             
             for (int c = 0; opacity > 0 && c < src.channels(); ++c)
             {
@@ -132,6 +133,25 @@ void Helpers::collatePatch(Mat src, Mat overlay, Point& location)
             }
         }
     }
+    
+    
+    /*
+    for(int i = location.x; i<(location.x+overlay.cols) ; i++ )
+    {
+        for(int j= location.y ; j <(location.y+overlay.rows); j ++)
+        {
+            if(overlay.at<Vec4b>(Point(i-location.x,j-location.y))[3] > 0)
+            {
+                src.at<Vec4b>(Point(i,j))[0] =
+                overlay.at<Vec4b>(Point(i-location.x,j-location.y))[0];
+                src.at<Vec4b>(Point(i,j))[1] =
+                overlay.at<Vec4b>(Point(i-location.x,j-location.y))[1];
+                src.at<Vec4b>(Point(i,j))[2] =
+                overlay.at<Vec4b>(Point(i-location.x,j-location.y))[2];
+                src.at<Vec4b>(Point(i,j))[3] = 255;
+            }
+        }
+    }*/
 }
 
 Mat Helpers::multiplyAlphaChannel(Mat src, float value)

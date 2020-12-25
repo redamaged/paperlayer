@@ -9,10 +9,12 @@ using namespace std;
 
 int main(int argc, char** argv )
 {
-    string dir_address ="../../../../Data3/";
-    string img_address = "../../../../Data/Lenna.png";
+    string dir_address ="../../../../Data4/";
+    string img_address = "../../../../Data/kay.jpg";
     Mat original= imread( img_address, IMREAD_UNCHANGED );
-    Mat collage = cv::Mat::zeros(original.size(), CV_8UC4);
+//   Mat collage = cv::Mat::zeros(original.size(), CV_8UC4);
+    Mat collage(original.size(), CV_8UC3, Scalar::all(0));
+//    Mat collage= imread("collage_conf90_2.png", IMREAD_UNCHANGED);
     Mat patch;
     Mat rotated_patch;
     
@@ -20,6 +22,8 @@ int main(int argc, char** argv )
     
     DIR *dir;
     struct dirent *ent;
+    int total_count = 0 ;
+    int admitted_count = 0 ;
     if ((dir = opendir (dir_address.c_str())) != NULL)
     {
         while ((ent = readdir (dir)) != NULL)
@@ -40,19 +44,27 @@ int main(int argc, char** argv )
                     double conf;
                     
                     imshow("Patch", patch);
-                    Algos::matchTemplate(original, patch, 3, matchLoc, rotated_patch, rot_angle, conf);
-                    cout<< conf<< endl;
-                    if(conf > 0.9)
-                        Helpers::collatePatch(collage, rotated_patch, matchLoc);
+                    cout<< total_count<< ": ";
+                    Algos::matchTemplate(original, patch, collage, 3, matchLoc, rotated_patch, rot_angle, conf);
                     
+                    if(conf > 0)
+                    {
+                        Helpers::collatePatch(collage, rotated_patch, matchLoc);
+                        admitted_count++;
+                    }
                     imshow("Coolage", collage);
+                    imshow("original", original);
                     waitKey(1);
+                    total_count++;
                 }
             }
         }
     }
     
+    std::cout<< "-----------------"<< std::endl;
     std::cout<< "Finished"<< std::endl;
+    std::cout<< "Total Patches:"<< total_count<< std::endl;
+    std::cout<< "Collated Patches: "<< admitted_count << std::endl;
     waitKey(0);
     Helpers::saveImageRandom(collage, "collage");
     

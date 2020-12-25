@@ -9,7 +9,7 @@ using namespace cv;
 
 // Globals
 bool finished=false;
-Mat img,ROI, origin;
+Mat img,ROI, origin, img_display;
 vector<Point> vertices;
 
 void
@@ -45,23 +45,28 @@ CallBackFunc(int event,int x,int y,int flags,void* userdata)
         
         Helpers::saveImageRandom(ROI, "out");
 
-		Point matchLoc;
-		Mat img_display;
+		Point matchLoc(9,99);
+        
+        
 		origin.copyTo(img_display);
 
 		Mat rotated_templ;
 		int rotation_angle;
 		double acc;
-		Algos::matchTemplate(origin, ROI, 3, matchLoc, rotated_templ, rotation_angle, acc);
+		Algos::matchTemplate(origin, ROI, img_display, 1, matchLoc, rotated_templ, rotation_angle, acc);
 		cout << "Confidence:" << acc << endl;
 		cout << "Rotation Angle:" << rotation_angle << endl;
-		rectangle(img_display, matchLoc, Point(matchLoc.x + rotated_templ.cols, matchLoc.y + rotated_templ.rows), Scalar::all(0), 1, 8, 0);
+        cout <<"matchLoc: " << matchLoc << endl;
+		rectangle(img_display, matchLoc, Point(matchLoc.x + rotated_templ.cols, matchLoc.y + rotated_templ.rows), Scalar::all(0), 2, 8, 0);
 
 		rotated_templ = Helpers::multiplyAlphaChannel(rotated_templ,1);
 
 		Helpers::collatePatch(img_display, rotated_templ, matchLoc);
 
+        
 		imshow("result", img_display);
+        imshow("ImageDisplay",origin);
+  
         
         return;
     }
@@ -81,12 +86,15 @@ CallBackFunc(int event,int x,int y,int flags,void* userdata)
 
 int main()
 {
-    img=imread("../../../../Data/Lenna.png");
-    origin =imread("../../../../Data/Lenna.png");
+    img     =imread("../../../../Data/Lenna.png");
+    origin  =imread("../../../../Data/Lenna.png");
+    img_display = cv::Mat::zeros(origin.size(), CV_8UC4);
     if(img.empty()){
         cout << "Error loading the image" << endl;
         exit(1);
     }
+    
+
     
     //Create a window
     namedWindow("ImageDisplay",1);

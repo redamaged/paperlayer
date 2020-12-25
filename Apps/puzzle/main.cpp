@@ -17,8 +17,8 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    Mat img=imread("../../../../Data/Lenna.png",-1);
-    Mat display= Setup::subdivideImage(img, 200, "out", 1);
+    Mat img=imread("../../../../Covers/7.jpg",-1);
+    Mat display= Setup::subdivideImage(img, 1000, "1", 0);
 	imshow("result", display);
 
 	waitKey(0);
