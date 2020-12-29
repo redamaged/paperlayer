@@ -5,9 +5,10 @@
 #include "algos.hpp"
 
 using namespace Helpers;
+using namespace cv;
 
 bool use_mask;
-Mat img; Mat templ, display;
+cv::Mat img; cv::Mat templ, display;
 const char* image_window = "Source Image";
 const char* templ_window = "Template window";
 const char* mask_window = "Mask window";
@@ -20,7 +21,7 @@ void MatchingMethod( int, void* );
  */
 int main( int argc, char** argv )
 {
-    img = imread( "../../../../Data/Lenna.png" ,IMREAD_UNCHANGED);
+    img = cv::imread( "../../../../Data/Lenna.png" , cv::IMREAD_UNCHANGED);
     templ = imread( "../../../../Data/shard.png", IMREAD_UNCHANGED );
     display =cv::Mat::zeros(img.size(), CV_8UC3);
   if(img.empty() || templ.empty() )
@@ -29,13 +30,13 @@ int main( int argc, char** argv )
     return EXIT_FAILURE;
   }
     
-  namedWindow( image_window, WINDOW_AUTOSIZE );
+  cv::namedWindow( image_window, cv::WINDOW_AUTOSIZE );
 
   const char* trackbar_label = "Method: \n 0: SQDIFF \n 1: SQDIFF NORMED \n 2: TM CCORR \n 3: TM CCORR NORMED \n 4: TM COEFF \n 5: TM COEFF NORMED";
-  createTrackbar( trackbar_label, image_window, &match_method, max_Trackbar, MatchingMethod );
+  cv::createTrackbar( trackbar_label, image_window, &match_method, max_Trackbar, MatchingMethod );
   MatchingMethod( 0, 0 );
 
-  waitKey(0);
+  cv::waitKey(0);
   return EXIT_SUCCESS;
 }
 
@@ -45,11 +46,11 @@ int main( int argc, char** argv )
  */
 void MatchingMethod( int, void* )
 {
-    Point matchLoc;
-    Mat img_display;
+	cv::Point matchLoc;
+	cv::Mat img_display;
     img.copyTo( img_display );
     
-    Mat rotated_templ;
+	cv::Mat rotated_templ;
     int rotation_angle;
     double acc;
     Algos::matchTemplate(img, templ, display, match_method, matchLoc, rotated_templ, rotation_angle, acc);

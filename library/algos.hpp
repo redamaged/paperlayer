@@ -12,19 +12,19 @@
 #include <iostream>
 
 using namespace std;
-using namespace cv;
+//using namespace cv;
 
 namespace Algos
 {	
-	void matchTemplate(Mat img, Mat templ, Mat collage, int matchMethod, Point& matchLoc, Mat& rotatedTempl, int& rotationAngle, double& confidence);
+	void matchTemplate(cv::Mat img, cv::Mat templ, cv::Mat collage, int matchMethod, cv::Point& matchLoc, cv::Mat& rotatedTempl, int& rotationAngle, double& confidence);
 };
 
 namespace Similarity
 {
-	double getPSNR(const Mat& I1, const Mat& I2);
-	Scalar getMSSIM(const Mat& i1, const Mat& i2);
-	double getMSE(const Mat& I1, const Mat& I2);
-	double getMAE(const Mat& I1, const Mat& I2);
+	double getPSNR(const cv::Mat& I1, const cv::Mat& I2);
+	cv::Scalar getMSSIM(const cv::Mat& i1, const cv::Mat& i2);
+	double getMSE(const cv::Mat& I1, const cv::Mat& I2);
+	double getMAE(const cv::Mat& I1, const cv::Mat& I2);
 }
  
 #endif

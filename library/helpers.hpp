@@ -12,25 +12,26 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include <iostream>
+#include<string.h>
 
 using namespace std;
-using namespace cv;
+//using namespace cv;
 
 namespace Helpers
 {
-Mat cropToVisible(Mat source);
-Mat addAplhaChannel(Mat source);
-void saveImageRandom(Mat image, String filename);
-void saveImageLabeled(Mat image,String dirName , String filename);
-Mat Rotate(Mat source, double angle);
-Mat removeAlphaChannel(Mat source);
-void collatePatch(Mat src, Mat overlay, Point& location);
-Mat multiplyAlphaChannel(Mat src, float value);
+cv::Mat cropToVisible(cv::Mat source);
+cv::Mat addAplhaChannel(cv::Mat source);
+void saveImageRandom(cv::Mat image, cv::String filename);
+void saveImageLabeled(cv::Mat image, cv::String dirName , cv::String filename);
+cv::Mat Rotate(cv::Mat source, double angle);
+cv::Mat removeAlphaChannel(cv::Mat source);
+void collatePatch(cv::Mat src, cv::Mat overlay, cv::Point& location);
+cv::Mat multiplyAlphaChannel(cv::Mat src, float value);
 };
 
 namespace Setup
 {
-Mat subdivideImage(Mat img, int patchCount, String dir_name, bool save);
+	cv::Mat subdivideImage(cv::Mat img, int patchCount, cv::String dir_name, bool save);
 }
 
 

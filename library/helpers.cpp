@@ -12,16 +12,16 @@
 
 
 using namespace std;
-using namespace cv;
+//using namespace cv;
 
-Mat Helpers::cropToVisible(Mat source)
+cv::Mat Helpers::cropToVisible(cv::Mat source)
 {
     int maxX = 0, minX =source.cols , maxY=0, minY = source.rows;                // bounding box
     for (int r=0; r<source.rows; r++)
     {
         for (int c=0; c<source.cols; c++)
         {
-            bool visible = (int)source.at<Vec4b>(Point(c, r))[3];
+            bool visible = (int)source.at<cv::Vec4b>(cv::Point(c, r))[3];
             if (visible)
             {
                 minX = min(minX,c);
@@ -31,24 +31,24 @@ Mat Helpers::cropToVisible(Mat source)
             }
         }
     }
-    Rect myROI(minX, minY, maxX-minX, maxY-minY);
+	cv::Rect myROI(minX, minY, maxX-minX, maxY-minY);
     
     
     return source(myROI);
 }
 
-Mat Helpers::addAplhaChannel(Mat source)
+cv::Mat Helpers::addAplhaChannel(cv::Mat source)
 {
     cv::Mat newSrc(source.size(), CV_MAKE_TYPE(source.depth(), 4));
-    cvtColor(source,newSrc,COLOR_BGR2BGRA);
+    cvtColor(source,newSrc, cv::COLOR_BGR2BGRA);
     return newSrc;
 }
 
 
-void Helpers::saveImageRandom(Mat image, String filename)
+void Helpers::saveImageRandom(cv::Mat image, cv::String filename)
 {
     std::vector<int> compression_params;
-    compression_params.push_back(IMWRITE_PNG_COMPRESSION);
+    compression_params.push_back(cv::IMWRITE_PNG_COMPRESSION);
     compression_params.push_back(0);
     srand (time(NULL));
     std::ostringstream ss;
@@ -58,10 +58,10 @@ void Helpers::saveImageRandom(Mat image, String filename)
     imwrite(ss.str(), image, compression_params);
 }
 
-void Helpers::saveImageLabeled(Mat image, String dirName, String filename)
+void Helpers::saveImageLabeled(cv::Mat image, cv::String dirName, cv::String filename)
 {
     std::vector<int> compression_params;
-    compression_params.push_back(IMWRITE_PNG_COMPRESSION);
+    compression_params.push_back(cv::IMWRITE_PNG_COMPRESSION);
     compression_params.push_back(0);
     std::ostringstream ss;
     
@@ -82,31 +82,31 @@ void Helpers::saveImageLabeled(Mat image, String dirName, String filename)
 }
 
 
-Mat Helpers::Rotate(Mat source, double angle)
+cv::Mat Helpers::Rotate(cv::Mat source, double angle)
 {
     // get rotation matrix for rotating the image around its center
-    Point2f center(source.cols/2.0, source.rows/2.0);
-    Mat rot = getRotationMatrix2D(center, angle, 1.0);
+	cv::Point2f center(source.cols/2.0, source.rows/2.0);
+	cv::Mat rot = getRotationMatrix2D(center, angle, 1.0);
     // determine bounding rectangle
-    Rect bbox = RotatedRect(center,source.size(), angle).boundingRect();
+	cv::Rect bbox = cv::RotatedRect(center,source.size(), angle).boundingRect();
     // adjust transformation matrix
     rot.at<double>(0,2) += bbox.width/2.0 - center.x;
     rot.at<double>(1,2) += bbox.height/2.0 - center.y;
     
-    Mat dst;
+	cv::Mat dst;
     warpAffine(source, dst, rot, bbox.size());
     
     return cropToVisible(dst);
 }
 
-Mat Helpers::removeAlphaChannel(Mat source)
+cv::Mat Helpers::removeAlphaChannel(cv::Mat source)
 {
     cv::Mat newSrc(source.size(), CV_MAKE_TYPE(source.depth(), 3));
-    cvtColor(source,newSrc,COLOR_BGRA2BGR);
+    cvtColor(source,newSrc, cv::COLOR_BGRA2BGR);
     return newSrc;
 }
 
-void Helpers::collatePatch(Mat src, Mat overlay, Point& location)
+void Helpers::collatePatch(cv::Mat src, cv::Mat overlay, cv::Point& location)
 {
     for (int y = max(location.y, 0); y < src.rows; ++y)
     {
@@ -154,28 +154,28 @@ void Helpers::collatePatch(Mat src, Mat overlay, Point& location)
     }*/
 }
 
-Mat Helpers::multiplyAlphaChannel(Mat src, float value)
+cv::Mat Helpers::multiplyAlphaChannel(cv::Mat src, float value)
 {
-    return src.mul(Scalar(1,1,1,value));
+    return src.mul(cv::Scalar(1,1,1,value));
 }
 
 
 
-static void paint_voronoi(const Mat img, Mat& display, Subdiv2D& subdiv, String dirName, bool save)
+static void paint_voronoi(const cv::Mat img, cv::Mat& display, cv::Subdiv2D& subdiv, cv::String dirName, bool save)
 {
-    vector<vector<Point2f> > facets;
-    vector<Point2f> centers;
+    vector<vector<cv::Point2f> > facets;
+    vector<cv::Point2f> centers;
     subdiv.getVoronoiFacetList(vector<int>(), facets, centers);
-    vector<Point> ifacet;
-    vector<vector<Point> > ifacets(1);
+    vector<cv::Point> ifacet;
+    vector<vector<cv::Point> > ifacets(1);
     for (size_t i = 0; i < facets.size(); i++)
     {
         ifacet.resize(facets[i].size());
         for (size_t j = 0; j < facets[i].size(); j++)
         ifacet[j] = facets[i][j];
-        Mat mask= Mat::zeros(img.rows,img.cols,CV_8UC1);
-        fillPoly(mask,ifacet,Scalar(255,255,255));
-        Mat ROI;
+		cv::Mat mask= cv::Mat::zeros(img.rows,img.cols,CV_8UC1);
+        fillPoly(mask,ifacet, cv::Scalar(255,255,255));
+		cv::Mat ROI;
         img.copyTo(ROI,mask);
         std::vector<cv::Mat> channels;
         cv::split(ROI, channels);
@@ -185,21 +185,21 @@ static void paint_voronoi(const Mat img, Mat& display, Subdiv2D& subdiv, String 
         if(save)
             Helpers::saveImageLabeled(ROI, dirName,to_string(i));
         ifacets[0] = ifacet;
-        polylines(display, ifacets, true, Scalar(0,255,0), 1, LINE_AA, 0);
+        polylines(display, ifacets, true, cv::Scalar(0,255,0), 1, cv::LINE_AA, 0);
     }
 }
 
-Mat Setup::subdivideImage(Mat img, int patchCount, String dir_name, bool save)
+cv::Mat Setup::subdivideImage(cv::Mat img, int patchCount, cv::String dir_name, bool save)
 {
-    Mat display = img.clone();
-    Scalar active_facet_color(0, 0, 255), delaunay_color(255, 255, 255);
-    Rect rect(0, 0, img.cols, img.rows);
-    Subdiv2D subdiv(rect);
+	cv::Mat display = img.clone();
+	cv::Scalar active_facet_color(0, 0, 255), delaunay_color(255, 255, 255);
+	cv::Rect rect(0, 0, img.cols, img.rows);
+	cv::Subdiv2D subdiv(rect);
     for (int i = 0; i < patchCount; i++)
     {
-        Point2f fp((float)(rand() % (rect.width - 10) + 5),
+		cv::Point2f fp((float)(rand() % (rect.width - 10) + 5),
                    (float)(rand() % (rect.height - 10) + 5));
-        subdiv.insert(fp);
+		subdiv.insert(fp);
     }
     paint_voronoi(img, display,subdiv, dir_name, save);
     return display;

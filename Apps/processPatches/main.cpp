@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include "helpers.hpp"
 #include "algos.hpp"
-#include <dirent.h>
 
+#include <Windows.h>
+#include "dirent.h"
 
 using namespace cv;
 using namespace std;
 
 int main(int argc, char** argv )
 {
-    string dir_address ="../../../../Data4/";
-    string img_address = "../../../../Data/kay.jpg";
+    string dir_address ="../../../../Data2/";
+    string img_address = "../../../../Data/Lenna.png";
     Mat original= imread( img_address, IMREAD_UNCHANGED );
 //   Mat collage = cv::Mat::zeros(original.size(), CV_8UC4);
     Mat collage(original.size(), CV_8UC3, Scalar::all(0));
