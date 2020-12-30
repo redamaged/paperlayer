@@ -2,15 +2,19 @@
 #include "helpers.hpp"
 #include "algos.hpp"
 
-#include <Windows.h>
-#include "dirent.h"
+#ifdef _WIN32
+#include "win_dirent.h"  // Windows
+#else
+#include <dirent.h>     // MacOS or Ubuntu
+#endif
+
 
 using namespace cv;
 using namespace std;
 
 int main(int argc, char** argv )
 {
-    string dir_address ="../../../../Data2/";
+    string dir_address ="../../../../Data15/";
     string img_address = "../../../../Data/Lenna.png";
     Mat original= imread( img_address, IMREAD_UNCHANGED );
 //   Mat collage = cv::Mat::zeros(original.size(), CV_8UC4);

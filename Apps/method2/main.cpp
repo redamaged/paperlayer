@@ -2,8 +2,11 @@
 #include "helpers.hpp"
 #include "algos.hpp"
 
-#include <Windows.h>
-#include "dirent.h"
+#ifdef _WIN32
+#include "win_dirent.h"  // Windows
+#else
+#include <dirent.h>     // MacOS or Ubuntu
+#endif
 
 using namespace cv;
 using namespace std;
