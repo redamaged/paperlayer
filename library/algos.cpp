@@ -88,19 +88,13 @@ public:
 
 
 
-void Algos::matchTemplate(cv::Mat img, cv::Mat templ, cv::Mat collage, int matchMethod, cv::Point& matchLocation, cv::Mat& rotatedTempl, int& rotationAngle, double& confidence)
+void Algos::matchTemplate(cv::Mat img, cv::Mat templ, int matchMethod, cv::Point& matchLocation, int& rotationAngle, double& confidence)
 {
     confidence = 0;
     vector<double> _rough_confidences(36), _fine_confidences(10);
     vector<cv::Point> _rough_locations(36), _fine_locations(10);
     int _angle= rotationAngle= 0;
-    
-//    Mat blurred_img = img.clone();
-//    Mat blurred_templ = templ.clone();
-//    cv::medianBlur(img, blurred_img, 5);
-//    cv::medianBlur(templ, blurred_templ, 5);
 
-    
 	cv::Mat _result;
     int result_cols =  img.cols - templ.cols + 1;
     int result_rows = img.rows - templ.rows + 1;
@@ -136,35 +130,32 @@ void Algos::matchTemplate(cv::Mat img, cv::Mat templ, cv::Mat collage, int match
             rotationAngle = _angle-5+i;
         }
     }
-    rotatedTempl = Helpers::Rotate(templ, rotationAngle);
-	cv::Rect myROI(matchLocation.x, matchLocation.y, rotatedTempl.cols, rotatedTempl.rows);
-	cv::Mat matched_ref = img(myROI);
-	cv::Mat matched_col = collage(myROI);
+//    rotatedTempl = Helpers::Rotate(templ, rotationAngle);
+
+}
+
+float Algos::estimateImprovement(cv::Mat img,
+                         cv::Mat templ,
+                         cv::Mat collage,
+                         cv::Point matchLoc,
+                         int rotationAngle,
+                         cv::Scalar& MSSIM)
+{
+    cv::Mat rotatedTempl = Helpers::Rotate(templ, rotationAngle);
+    cv::Rect myROI(matchLoc.x, matchLoc.y, rotatedTempl.cols, rotatedTempl.rows);
+    cv::Mat matched_ref = img(myROI);
+    cv::Mat matched_col = collage(myROI);
     cv::Point p(0,0);
-	cv::Mat expected =collage(myROI).clone();
+    cv::Mat expected =collage(myROI).clone();
     Helpers::collatePatch(expected, rotatedTempl, p);
-	cv::Scalar MSSIM1, MSSIM2;
+    cv::Scalar MSSIM1, MSSIM2;
     MSSIM1= Similarity::getMAE(expected, matched_ref);
     MSSIM2= Similarity::getMAE(matched_col, matched_ref);
-    
-    if((MSSIM1[0]+MSSIM1[1]+MSSIM1[2]) < (MSSIM2[0]+MSSIM2[1]+MSSIM2[2]))
-        confidence = 0;
+    MSSIM = MSSIM1;
+    if((MSSIM1[0]+MSSIM1[1]+MSSIM1[2]) <= (MSSIM2[0]+MSSIM2[1]+MSSIM2[2]))
+        return 0;
     else
-        if( MSSIM1[0] > 0.90)
-        {
-			cv::Mat noise = rotatedTempl.clone();
-            cv::randn(noise, (255,255,255), (255,255,255));
-            std::vector<cv::Mat> tmpl_channels;
-            cv::split(rotatedTempl, tmpl_channels);
-            std::vector<cv::Mat> noise_channels;
-            cv::split(noise, noise_channels);
-            noise_channels.pop_back();
-            noise_channels.push_back(tmpl_channels.at(3));
-            cv::merge(noise_channels, noise);
-            Helpers::collatePatch(img, noise, matchLocation);
-        }
-    cout<< MSSIM1 << "," << MSSIM2;
-    cout<< "                   Conf: " << confidence<< endl;
+        return (MSSIM1[0]+MSSIM1[1]+MSSIM1[2]);
 }
 
 // ![get-psnr]

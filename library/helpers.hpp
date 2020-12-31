@@ -26,12 +26,13 @@ void saveImageLabeled(cv::Mat image, cv::String dirName , cv::String filename);
 cv::Mat Rotate(cv::Mat source, double angle);
 cv::Mat removeAlphaChannel(cv::Mat source);
 void collatePatch(cv::Mat src, cv::Mat overlay, cv::Point& location);
+void collateNoise(cv::Mat src, cv::Mat overlay, cv::Point& location);
 cv::Mat multiplyAlphaChannel(cv::Mat src, float value);
 };
 
 namespace Setup
 {
-	cv::Mat subdivideImage(cv::Mat img, int patchCount, cv::String dir_name, bool save);
+cv::Mat subdivideImage(cv::Mat img, int patchCount, cv::String dir_name, bool save);
 }
 
 

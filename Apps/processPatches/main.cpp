@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc, char** argv )
 {
-    string dir_address ="../../../../Data15/";
+    string dir_address ="../../../../Data3/";
     string img_address = "../../../../Data/Lenna.png";
     Mat original= imread( img_address, IMREAD_UNCHANGED );
 //   Mat collage = cv::Mat::zeros(original.size(), CV_8UC4);
@@ -50,11 +50,16 @@ int main(int argc, char** argv )
                     
                     imshow("Patch", patch);
                     cout<< total_count<< ": ";
-                    Algos::matchTemplate(original, patch, collage, 3, matchLoc, rotated_patch, rot_angle, conf);
-                    
-                    if(conf > 0)
+                    Algos::matchTemplate(original, patch, 3, matchLoc, rot_angle, conf);
+                    rotated_patch = Helpers::Rotate(patch, rot_angle);
+                    Scalar MSSIM;
+                    if(Algos::estimateImprovement(original, patch, collage, matchLoc, rot_angle, MSSIM)> 0)
                     {
                         Helpers::collatePatch(collage, rotated_patch, matchLoc);
+                        if( MSSIM[0] > 0.90)
+                        {
+                            Helpers::collateNoise(original, rotated_patch, matchLoc);
+                        }
                         admitted_count++;
                     }
                     imshow("Coolage", collage);

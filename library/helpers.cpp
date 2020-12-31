@@ -5,14 +5,10 @@
  */
 
 #include "helpers.hpp"
-
-
 #include <sys/types.h>
 #include <sys/stat.h>
 
-
 using namespace std;
-//using namespace cv;
 
 cv::Mat Helpers::cropToVisible(cv::Mat source)
 {
@@ -133,26 +129,23 @@ void Helpers::collatePatch(cv::Mat src, cv::Mat overlay, cv::Point& location)
             }
         }
     }
-    
-    
-    /*
-    for(int i = location.x; i<(location.x+overlay.cols) ; i++ )
-    {
-        for(int j= location.y ; j <(location.y+overlay.rows); j ++)
-        {
-            if(overlay.at<Vec4b>(Point(i-location.x,j-location.y))[3] > 0)
-            {
-                src.at<Vec4b>(Point(i,j))[0] =
-                overlay.at<Vec4b>(Point(i-location.x,j-location.y))[0];
-                src.at<Vec4b>(Point(i,j))[1] =
-                overlay.at<Vec4b>(Point(i-location.x,j-location.y))[1];
-                src.at<Vec4b>(Point(i,j))[2] =
-                overlay.at<Vec4b>(Point(i-location.x,j-location.y))[2];
-                src.at<Vec4b>(Point(i,j))[3] = 255;
-            }
-        }
-    }*/
 }
+
+
+void Helpers::collateNoise(cv::Mat src, cv::Mat overlay, cv::Point& location)
+{
+    cv::Mat noise = overlay.clone();
+    cv::randn(noise, (255,255,255), (255,255,255));
+    std::vector<cv::Mat> tmpl_channels;
+    cv::split(overlay, tmpl_channels);
+    std::vector<cv::Mat> noise_channels;
+    cv::split(noise, noise_channels);
+    noise_channels.pop_back();
+    noise_channels.push_back(tmpl_channels.at(3));
+    cv::merge(noise_channels, noise);
+    Helpers::collatePatch(src, noise, location);
+}
+
 
 cv::Mat Helpers::multiplyAlphaChannel(cv::Mat src, float value)
 {
