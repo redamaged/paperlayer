@@ -53,7 +53,7 @@ CallBackFunc(int event,int x,int y,int flags,void* userdata)
 		Mat rotated_templ;
 		int rotation_angle;
 		double acc;
-		Algos::matchTemplate(origin, ROI, img_display, 1, matchLoc, rotated_templ, rotation_angle, acc);
+		Algos::matchTemplate(origin, ROI, 1, matchLoc, rotation_angle, acc);
 		cout << "Confidence:" << acc << endl;
 		cout << "Rotation Angle:" << rotation_angle << endl;
         cout <<"matchLoc: " << matchLoc << endl;

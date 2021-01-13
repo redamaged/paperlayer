@@ -135,7 +135,7 @@ void Helpers::collatePatch(cv::Mat src, cv::Mat overlay, cv::Point& location)
 void Helpers::collateNoise(cv::Mat src, cv::Mat overlay, cv::Point& location)
 {
     cv::Mat noise = overlay.clone();
-    cv::randn(noise, (255,255,255), (255,255,255));
+    cv::randn(noise, (128,128,128), (255,255,255));
     std::vector<cv::Mat> tmpl_channels;
     cv::split(overlay, tmpl_channels);
     std::vector<cv::Mat> noise_channels;

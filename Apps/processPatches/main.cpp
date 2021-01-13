@@ -14,12 +14,12 @@ using namespace std;
 
 int main(int argc, char** argv )
 {
-    string dir_address ="../../../../Data3/";
-    string img_address = "../../../../Data/Lenna.png";
+    string dir_address ="../../../../Data4/";
+    string img_address = "../../../../Data/puppy512.png";
     Mat original= imread( img_address, IMREAD_UNCHANGED );
 //   Mat collage = cv::Mat::zeros(original.size(), CV_8UC4);
-    Mat collage(original.size(), CV_8UC3, Scalar::all(0));
-//    Mat collage= imread("collage_conf90_2.png", IMREAD_UNCHANGED);
+//    Mat collage(original.size(), CV_8UC3, Scalar(83,172,223));
+    Mat collage= imread("../../../../Data/pup.png", IMREAD_UNCHANGED);
     Mat patch;
     Mat rotated_patch;
     

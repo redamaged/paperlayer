@@ -48,6 +48,8 @@ int main(int argc, char** argv )
     //imshow("coloredPatch", coloredpatch);
     cout << "Loaded..........." << endl;
     
+    
+    
     imshow("Origin", original);
     imshow("Collage", collage);
     imshow("Cover", cover);

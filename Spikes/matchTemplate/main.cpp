@@ -23,6 +23,11 @@ int main( int argc, char** argv )
 {
     img = cv::imread( "../../../../Data/Lenna.png" , cv::IMREAD_UNCHANGED);
     templ = imread( "../../../../Data/shard.png", IMREAD_UNCHANGED );
+    
+    
+    templ = Helpers::Rotate(templ, 33);
+    
+    
     display =cv::Mat::zeros(img.size(), CV_8UC3);
   if(img.empty() || templ.empty() )
   {
@@ -51,13 +56,15 @@ void MatchingMethod( int, void* )
     img.copyTo( img_display );
     
 	cv::Mat rotated_templ;
-    int rotation_angle;
+    int rotation_angle=0;
     double acc;
-    Algos::matchTemplate(img, templ, display, match_method, matchLoc, rotated_templ, rotation_angle, acc);
+    Algos::matchTemplate(img, templ, match_method, matchLoc, rotation_angle, acc);
     cout<< "Confidence:" << acc << endl;
     cout<< "Rotation Angle:" << rotation_angle << endl;
+    
+    rotated_templ= Helpers::Rotate(templ, rotation_angle);
     rectangle( img_display, matchLoc, Point( matchLoc.x + rotated_templ.cols , matchLoc.y + rotated_templ.rows ), Scalar::all(0), 2, 8, 0 );
-  
+    
     rotated_templ= Helpers::multiplyAlphaChannel(rotated_templ, 0.5);
    
     Helpers::collatePatch(img_display, rotated_templ, matchLoc);
