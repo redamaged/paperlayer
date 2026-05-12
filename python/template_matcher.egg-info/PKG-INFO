@@ -1,0 +1,300 @@
+Metadata-Version: 2.4
+Name: template-matcher
+Version: 0.1.0
+Summary: Template matching with rotation estimation using ORB, SIFT, AKAZE
+Home-page: https://github.com/yourusername/template-matcher
+Author: Your Name
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Scientific/Engineering :: Image Recognition
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: opencv-python>=4.5.0
+Requires-Dist: numpy>=1.19.0
+Provides-Extra: dev
+Requires-Dist: pytest>=6.0; extra == "dev"
+Requires-Dist: pytest-cov>=2.10; extra == "dev"
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Template Matcher - Rotation and Translation Detection
+
+A Python library for detecting template positions and rotation angles in images using feature-based matching with ORB, SIFT, or AKAZE algorithms.
+
+## Features
+
+- **Three Detection Methods**: ORB, SIFT, AKAZE
+- **Rotation Estimation**: Automatically calculates rotation angle from matched features
+- **Translation Detection**: Precise x/y position detection
+- **Transparent Background Support**: Works with PNG templates on transparent backgrounds
+- **Easy Method Switching**: Switch between algorithms at runtime
+- **Confidence Scoring**: Returns confidence metric for each detection
+- **Visualization**: Draw detected template position and rotation on images
+- **Utility Functions**: Image loading, resizing, visualization helpers
+
+## Installation
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### Requirements
+- Python 3.7+
+- OpenCV (opencv-python 4.5.0+)
+- NumPy 1.19.0+
+
+## Quick Start
+
+### Basic Usage
+
+```python
+from template_matcher import TemplateMatcher, DetectionMethod
+from template_matcher.utils import load_image_with_transparency, load_image
+
+# Load images
+template = load_image_with_transparency("template.png")  # Can have transparency
+image = load_image("scene.jpg")
+
+# Create matcher (default: SIFT)
+matcher = TemplateMatcher(DetectionMethod.SIFT)
+
+# Match template in image
+result = matcher.match(template, image, min_matches=10)
+
+# Access results
+print(f"Position: ({result.x:.2f}, {result.y:.2f})")
+print(f"Rotation: {result.rotation_angle:.2f}°")
+print(f"Confidence: {result.confidence:.4f}")
+print(f"Success: {result.success}")
+```
+
+### Switching Detection Methods
+
+```python
+from template_matcher import DetectionMethod
+
+# Use SIFT (most accurate but slower)
+matcher.set_method(DetectionMethod.SIFT)
+result_sift = matcher.match(template, image)
+
+# Use ORB (fastest but less accurate)
+matcher.set_method(DetectionMethod.ORB)
+result_orb = matcher.match(template, image)
+
+# Use AKAZE (good balance)
+matcher.set_method(DetectionMethod.AKAZE)
+result_akaze = matcher.match(template, image)
+```
+
+### With Visualization
+
+```python
+# Get result and visualization
+result, visualization = matcher.match_with_visualization(
+    template, image, 
+    draw_matches=True
+)
+
+if visualization is not None:
+    # Save or display visualization
+    from template_matcher.utils import save_image
+    save_image(visualization, "result.png")
+```
+
+### Advanced: Overlay Template on Result
+
+```python
+from template_matcher.utils import overlay_template_on_image
+
+# Overlay the detected template at the found position
+output = overlay_template_on_image(
+    template, image,
+    x=result.x,
+    y=result.y,
+    rotation_angle=result.rotation_angle,
+    alpha=0.5
+)
+```
+
+## API Reference
+
+### TemplateMatcher Class
+
+#### Constructor
+```python
+TemplateMatcher(method: DetectionMethod = DetectionMethod.SIFT)
+```
+
+#### Methods
+
+**`match(template, image, min_matches=10) -> MatchResult`**
+
+Detect template in image and estimate rotation.
+
+- `template`: Template image (BGRA or BGR)
+- `image`: Larger image to search in
+- `min_matches`: Minimum number of matches required (default: 10)
+- Returns: `MatchResult` object
+
+**`set_method(method: DetectionMethod) -> None`**
+
+Switch to a different detection method.
+
+**`match_with_visualization(template, image, draw_matches=False) -> Tuple[MatchResult, Optional[ndarray]]`**
+
+Detect template and optionally return visualization.
+
+### MatchResult Dataclass
+
+```python
+@dataclass
+class MatchResult:
+    x: float                    # X coordinate of template center
+    y: float                    # Y coordinate of template center
+    rotation_angle: float       # Rotation in degrees (-180 to 180)
+    confidence: float           # Confidence score (0-1)
+    num_matches: int            # Number of matched features
+    method: str                 # Detection method used
+    success: bool               # Whether detection was successful
+```
+
+### DetectionMethod Enum
+
+```python
+class DetectionMethod(Enum):
+    ORB = "orb"      # Fastest, uses ORB algorithm
+    SIFT = "sift"    # Most accurate, uses SIFT algorithm
+    AKAZE = "akaze"  # Good balance, uses AKAZE algorithm
+```
+
+## Utility Functions
+
+### Image Loading
+```python
+from template_matcher.utils import load_image_with_transparency, load_image
+
+template = load_image_with_transparency("template.png")  # Preserves alpha
+image = load_image("scene.jpg")                          # Standard BGR
+```
+
+### Visualization
+```python
+from template_matcher.utils import (
+    overlay_template_on_image,
+    combine_images_horizontal,
+    save_image
+)
+
+# Overlay template at detected position
+output = overlay_template_on_image(template, image, result.x, result.y, result.rotation_angle)
+
+# Combine two images side-by-side
+combined = combine_images_horizontal(image1, image2)
+
+# Save result
+save_image(output, "output.png")
+```
+
+## Algorithm Comparison
+
+| Method | Speed | Accuracy | Works on Rotation | Best For |
+|--------|-------|----------|------------------|----------|
+| ORB | Very Fast | Good | Yes | Real-time applications |
+| SIFT | Slow | Excellent | Yes | High precision needed |
+| AKAZE | Fast | Very Good | Yes | Balance of speed/accuracy |
+
+## Known Limitations
+
+1. **Scale Variation**: Currently assumes fixed scale (only rotation + translation)
+2. **Minimum Matches**: Requires sufficient distinctive features in template
+3. **Feature Density**: Works best with textured templates, not solid colors
+4. **Rotation Range**: Works well for 0-360° but homography might be unstable at extreme angles
+
+## Testing
+
+Run the comprehensive test suite:
+
+```bash
+cd template_matcher/tests
+python test_demo.py
+```
+
+This will:
+1. Generate synthetic test data
+2. Test all three detection methods
+3. Log detailed results
+4. Compare with expected values
+5. Generate visualization images
+
+## Output
+
+Results are logged to `template_matching.log` with:
+- Detection success/failure
+- Detected position (x, y)
+- Detected rotation angle
+- Confidence score
+- Number of matched features
+- Error analysis (if ground truth provided)
+
+## Performance Tips
+
+1. **Use SIFT for maximum accuracy** but expect slower processing
+2. **Use ORB for real-time processing** with reasonable accuracy
+3. **Use AKAZE for a good balance** between speed and accuracy
+4. **Preprocess images** if they're very large (resize to 1000px max)
+5. **Increase min_matches** for higher confidence in results
+6. **Ensure template has distinctive features** (texture/contrast)
+
+## Troubleshooting
+
+**"Success: False" or low match count:**
+- Template may lack distinctive features (too plain or uniform)
+- Template might be too small relative to image size
+- Scene might not contain the template at all
+- Try increasing template size or adding more texture
+
+**Incorrect rotation angle:**
+- Homography might be poorly conditioned
+- Check that template has good feature distribution
+- Try with different detection method (SIFT usually most robust)
+
+**Slow processing:**
+- Use ORB instead of SIFT
+- Resize images to smaller size
+- Use fewer features (reduce nfeatures parameter)
+
+## Example Scripts
+
+See `tests/test_demo.py` for comprehensive examples including:
+- Synthetic data generation
+- All three detection methods
+- Batch processing
+- Result logging
+- Visualization generation
+
+## Contributing
+
+Contributions welcome! Areas for enhancement:
+- Multi-scale detection
+- Perspective transformation handling
+- GPU acceleration
+- Additional feature detectors
+
+## License
+
+MIT License

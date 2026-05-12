@@ -1,0 +1,13 @@
+README.md
+setup.py
+template_matcher/__init__.py
+template_matcher/matcher.py
+template_matcher/utils.py
+template_matcher.egg-info/PKG-INFO
+template_matcher.egg-info/SOURCES.txt
+template_matcher.egg-info/dependency_links.txt
+template_matcher.egg-info/requires.txt
+template_matcher.egg-info/top_level.txt
+template_matcher/tests/__init__.py
+template_matcher/tests/examples.py
+template_matcher/tests/test_demo.py
